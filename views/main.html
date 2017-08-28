@@ -1,0 +1,90 @@
+<md-content ng-show="state === 'main'" layout="column" layout-fill>
+	<section class="d-padding-8 hel-color-prim d-min-height-64" layout="row" layout-align="none center">
+		<md-button class="md-icon-button" aria-label="Back">
+			<ng-md-icon icon="arrow_back"></ng-md-icon>
+		</md-button>
+		<img class="s-vkn" src="img/vaakuna.jpg" alt="">
+		<md-truncate class="d-padding-8-h d-margin-8 md-headline">{{appTitle}}</md-truncate>
+		<div flex></div>
+		<md-button class="md-icon-button" aria-label="Info" ng-click="c.openInfo()">
+			<ng-md-icon icon="info"></ng-md-icon>
+		</md-button>
+	</section>
+
+	<section class="d-padding-8-t d-padding-4-b d-padding-4-h" layout="row" layout-align="none none" ng-keydown="c.keydown($event, searchText)">
+	
+		<md-input-container flex="35" class="d-input-container-search d-max-width-040">
+			<input ng-model="searchText" type="text" placeholder="Vapaa haku" ng-focus="c.focusChange(true)" ng-blur="c.focusChange(false)">
+		</md-input-container>
+		<md-input-container layout="row" layout-align="none center" class="d-input-container-icon">
+			<md-button class="md-icon-button d-margin-0-h" aria-label="Hae" title="Hae" ng-click="c.doSearch(searchText)">
+				<ng-md-icon icon="search"></ng-md-icon>
+			</md-button>
+		</md-input-container>
+		<div flex></div>
+		<md-input-container layout="row" layout-align="none center" class="d-input-container">
+			<md-truncate class="d-margin-8">Vain viranhaltijapäätökset</md-truncate>
+			<md-switch class="hel-sw-prim d-switch" ng-model="c.decisionButton" aria-label="Näytä"></md-switch>
+			<md-truncate class="d-margin-8">Näytä ratkaistut</md-truncate>
+			<md-switch class="hel-sw-prim d-switch-last" ng-model="c.solutionButton" aria-label="Näytä"></md-switch>
+		</md-input-container>
+	
+	</section>
+	
+	<section class="d-padding-4" layout="row" layout-align="none center">
+		<div flex ng-class="{'d-padding-4-r': $first, 'd-padding-4-h': $middle, 'd-padding-4-l': $last}" 
+				ng-repeat="category in c.uiCategories.get() track by $index" >
+			<md-button layout-fill
+				class="d-padding-8-h d-padding-2-v d-border-radius-8"
+				ng-class="{'hel-btn-sel': c.selectedAlias === category.alias, 'hel-btn-opt': c.selectedAlias !== category.alias}"
+				ng-click="c.categorySelected(category)">
+				<div layout="row">
+					<md-truncate flex class="d-text-l">{{category.alias}}</md-truncate>
+					<md-chip-template>
+						<strong ng-if="category.items.length" class="d-chip d-padding-8-h d-padding-4-v d-animation">{{category.items.length}}</strong>
+      				</md-chip-template>
+				</div>
+			</md-button>
+		</div>
+	</section>
+	
+	<section flex class="d-padding-4-t d-padding-8-b d-padding-4-h" layout="column">
+		<div class="d-padding-8-v d-padding-16-h hel-color-opt d-border-1-l d-border-1-t d-border-1-r d-border-radius-8-t hel-brd-color-opt" layout="row" layout-align="none center">
+			<md-truncate class="d-list-item-header d-elem-1">Diaarinumero</md-truncate>
+			<md-truncate class="d-list-item-header d-elem-2">Toimiala</md-truncate>
+			<md-truncate flex class="d-list-item-header d-elem-3">Otsikko</md-truncate>
+			<md-truncate class="d-list-item-header d-elem-4">Valmistelijat</md-truncate>
+			<md-truncate class="d-list-item-header d-elem-5">Avattu</md-truncate>
+			<md-truncate class="d-list-item-header d-elem-6">Määräaika</md-truncate>
+			<div class="d-hidden hel-circle-green"></div>
+		</div>
+		<div flex class="d-scroll-view d-border-1-l d-border-1-b d-border-1-r d-border-radius-8-b hel-brd-color-opt d-virtual-repeater" layout="column">
+		
+			<md-list class="d-padding-0" layout="column" flex>
+				<md-virtual-repeat-container flex>
+					<md-list-item aria-label="Asia" md-virtual-repeat="item in c.visibleItems.get()" 
+							class="d-border-1-b hel-brd-color-sel d-list-button d-list-item" 
+							ng-click="c.openItem(item)" layout="row">
+						<div class="d-list-item-child d-elem-1">{{item.id}}</div>
+						<div class="d-list-item-child d-elem-2">{{c.uiSelectedAlias}}</div>
+						<div flex class="d-list-item-child d-elem-3">{{item.subject}}</div>
+						<div class="d-list-item-child d-elem-4">{{item.preparer}}</div>
+						<div class="d-list-item-child d-elem-5">{{item.decision_date | date : format : timezone}}</div>
+						<div class="d-list-item-child d-elem-6">{{item.decision_date | date : format : timezone}}</div>
+						<div class="{{item.cls}}"></div>
+					</md-list-item>
+					<md-toolbar layout="row" layout-align="center center" flex class="d-list-item hel-color-transparent">
+ 						<md-button ng-if="(!c.scrolling || c.allCategories.loading)" ng-disabled="c.allCategories.loading" class="md-fab d-fab md-mini hel-btn-prim d-animation" aria-label="Hae lisää"
+ 								title="Hae lisää" ng-click="c.doLoad(c.allCategories)">
+							<ng-md-icon icon="refresh" ng-class="{'d-spin': c.allCategories.loading}"></ng-md-icon>
+       					</md-button>
+      				</md-toolbar>
+				</md-virtual-repeat-container>
+			</md-list>
+
+		</div>
+	</section>
+	
+</md-content>
+
+<ui-view></ui-view>

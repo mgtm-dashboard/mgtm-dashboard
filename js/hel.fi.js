@@ -1,0 +1,4 @@
+'use strict';angular.module('hel.service',[]).service('HelService',['$window',function($window){var self=this;self.systemOS=function(){var userAgent=$window.navigator.userAgent;if(/windows phone/i.test(userAgent)){return"Windows Phone";}
+if(/android/i.test(userAgent)){return"Android";}
+if(/iPad|iPhone|iPod/.test(userAgent)&&!window.MSStream){return"iOS";}
+return'tuntematon';};self.browser=function(){var userAgent=$window.navigator.userAgent;var browsers={chrome:/chrome/i,safari:/safari/i,firefox:/firefox/i,ie:/internet explorer/i};for(var key in browsers){if(browsers[key].test(userAgent)){return key;}};return'tuntematon';};self.userAgent=function(){return $window.navigator.userAgent;};}]);

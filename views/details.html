@@ -1,0 +1,93 @@
+<md-content layout="column" layout-fill>
+	
+	<section class="d-padding-8 hel-color-prim d-min-height-64" layout="row" layout-align="none center">
+		<md-button class="md-icon-button" aria-label="Back" ng-click="goState()">
+			<ng-md-icon icon="arrow_back"></ng-md-icon>
+		</md-button>
+		<img class="s-vkn" src="img/vaakuna.jpg" alt="">
+		<md-truncate class="d-padding-8-h d-margin-8 md-headline">{{appTitle}}</md-truncate>
+		<div flex></div>
+		<md-button ng-if="c.alias" class="md-icon-button" aria-label="Suodatin" ng-click="c.toggleFilter()">
+			<ng-md-icon icon="filter_list"></ng-md-icon>
+		</md-button>
+		<md-button class="md-icon-button" aria-label="Info">
+			<ng-md-icon icon="info"></ng-md-icon>
+		</md-button>
+	</section>
+	
+	<section class="d-scroll-view" flex>
+		<div layout="row" class="d-margin-8-h">
+			<div class="d-padding-8" flex="30" layout="column">
+				<md-truncate class="d-padding-4">Diaarinumero</md-truncate>
+				<div class="d-padding-4 d-bold">{{c.item.issue.register_id}}</div>
+			</div>
+			<div class="d-padding-8" flex="55" layout="column">
+				<md-truncate class="d-padding-4">Tehtäväluokka</md-truncate>
+				<div class="d-padding-4 d-bold">{{c.item.issue.top_category_name}}</div>
+			</div>
+			<div class="d-padding-8" flex="15" layout="column">
+				<md-truncate class="d-padding-4">Avattu</md-truncate>
+				<div class="d-padding-4 d-bold">{{c.item.issue.latest_decision_date | date : format : timezone}}</div>
+			</div>
+		</div>
+		<div layout="row" class="d-margin-8-h  d-padding-8-b">
+			<div class="d-padding-8" flex="30" layout="column">
+				<md-truncate class="d-padding-4">Otsikko</md-truncate>
+				<div class="d-padding-4 d-bold">{{c.item.issue.subject}}</div>
+			</div>
+			<div class="d-padding-8" flex="55" layout="column">
+				<md-truncate class="d-padding-4">Kuvaus</md-truncate>
+				<div class="d-padding-4 d-bold">{{c.item.issue.summary}}</div>
+			</div>
+			<div class="d-padding-8" flex="15" layout="column">
+				<md-truncate class="d-padding-4">Määräaika</md-truncate>
+				<div class="d-padding-4 d-bold">{{c.item.issue.latest_decision_date | date : format : timezone}}</div>
+			</div>
+		</div>
+	
+		<div flex class="d-padding-4-t d-padding-8-b d-padding-4-h" layout="column">
+			<div class="" layout="row" layout-align="none center">
+				<md-button ng-repeat="header in c.headers" layout-fill class="d-margin-0 d-text-l" 
+						ng-click="c.headerSelected(header)" 
+						ng-class="{'hel-btn-prim': header !== c.selectedHeader, 'hel-btn-opt': header === c.selectedHeader, 'd-border-radius-8-tl': $first, 'd-border-radius-8-tr': $last}">
+					<md-truncate class="d-margin-0 d-padding-8">{{header.title}}</md-truncate>
+				</md-button>
+			</div>
+			<div ng-show="c.selectedHeader.title === 'Aikajana'" layout="row" layout-align="none center">
+				<md-button ng-repeat="subheader in c.subheaders" layout-fill class="d-margin-0 d-text-l hel-btn-opt d-border-radius-0" ng-click="">
+					<md-truncate class="d-margin-0 d-padding-8">{{subheader.title}}</md-truncate>
+				</md-button>
+			</div>
+			<div ng-show="c.selectedHeader.title === 'Asiakirjat'" layout="row" layout-align="none center">
+				<md-button ng-repeat="link in c.links" layout-fill class="d-margin-0 d-text-l hel-btn-opt d-border-radius-0" ng-click="">
+					<md-truncate class="d-margin-0 d-padding-8">{{link.title}}</md-truncate>
+				</md-button>
+			</div>
+		
+			<div flex class="d-border-1-l d-border-1-b d-border-1-r d-border-radius-8-b hel-brd-color-opt" layout="column">
+				<md-list flex ng-show="(c.selectedHeader.title === 'Aikajana')" class="d-padding-0" layout="column">
+					<md-list-item aria-label="Sisältö" ng-repeat="action in c.item.actions | itemFilter: c.selectedAlias" class="d-border-1-b hel-brd-color-sel d-list-button-sm"
+						ng-click="c.actionSelected(action)">
+						<div flex class="d-padding-12-h">{{action.alias}}</div>
+						<div flex class="d-padding-12-h">{{action.preparer}}</div>
+						<div flex class="d-padding-12-h">{{action.state}}</div>
+						<div flex class="d-padding-12-h">{{action.date}}</div>
+					</md-list-item>
+				</md-list>
+				<md-list flex ng-show="(c.selectedHeader.title === 'Asiakirjat')" class="d-padding-0" layout="column">
+					<md-list-item aria-label="Asiakirja" ng-repeat="attachment in c.item.attachments" class="d-border-1-b hel-brd-color-sel d-list-button-sm"
+							ng-click="c.attachmentSelected(attachment)">
+						<div flex class="d-padding-12-h">{{attachment.name}}</div>
+						<div flex class="d-padding-12-h" layout="row">
+							<span flex>{{attachment.file_type}}</span>
+							<span ng-if="attachment.public">Julkinen</span>
+							<span ng-if="!attachment.public">Salainen</span>
+						</div>
+					</md-list-item>
+				</md-list>
+			</div>
+		</div>
+		
+	</section>
+	
+</md-content>
